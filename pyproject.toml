@@ -8,10 +8,8 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.12, <4.0"
 dependencies = [
-    "zaber-motion (>=4.8.0,<5.0.0)",
     "scipy (>=1.15.2,<2.0.0)",
     "numpy (>=2.2.4,<3.0.0)",
-    "matplotlib (>=3.10.1,<4.0.0)",
     "tomli-w (>=1.2.0,<2.0.0)",
 ]
 
