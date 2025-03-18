@@ -1,0 +1,37 @@
+comport = "/dev/tty.usbmodem1122811" # the comport name string
+
+[[devices]] # a device
+address = 1 # the device address
+[[devices.axes]] # an axis on that device
+name = "x-axis"
+axis = 4        # int means normal axis
+[[devices.axes]] # another axis on that device
+name = "y-axis"
+axis = 3
+[[devices.axes]]
+name = "z-axis"
+axis = [1, 2]   # array means lockstep
+
+[[devices]] # another device
+address = 2 # must have a different address
+[[devices.axes]]
+name = "x-axis"
+axis = 4
+[[devices.axes]]
+name = "y-axis"
+axis = 3
+[[devices.axes]]
+name = "z-axis"
+axis = [1, 2]
+
+[[devices]]
+address = 3
+[[devices.axes]]
+name = "x-axis"
+axis = 4
+[[devices.axes]]
+name = "y-axis"
+axis = 3
+[[devices.axes]]
+name = "z-axis"
+axis = [1, 2]

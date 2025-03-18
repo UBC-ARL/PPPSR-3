@@ -1,0 +1,22 @@
+[project]
+name = "pppsr-3"
+version = "0.1.0"
+description = ""
+authors = [
+    { name = "Yifei Liu", email = "34564223+EzekielDaun@users.noreply.github.com" },
+]
+readme = "README.md"
+requires-python = ">=3.12, <4.0"
+dependencies = [
+    "zaber-motion (>=4.8.0,<5.0.0)",
+    "scipy (>=1.15.2,<2.0.0)",
+    "numpy (>=2.2.4,<3.0.0)",
+    "click (>=8.1.8,<9.0.0)",
+    "matplotlib (>=3.10.1,<4.0.0)",
+    "tomli-w (>=1.2.0,<2.0.0)",
+    "arl-utils-py @ git+https://github.com/UBC-ARL/ARL-utils-py.git",
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
