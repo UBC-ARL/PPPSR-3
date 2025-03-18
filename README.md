@@ -1,40 +1,23 @@
-# LockStep Tuner
+# PPPSR-3
 
-A Python script to move multi-axis device daisy chains with some axes in lockstep mode.
+The inverse kinematics of the [3-PPPSR parallel robot](https://youtu.be/dSiWhBYOIuw?si=0RrZgnmPRrChVzVT).
 
 ## Installation
 
-### Poetry
+This project is built with [Poetry](https://python-poetry.org/).
 
 ```bash
 poetry install
 ```
 
-### pip
+## Usage
+
+Please see the [tests](./tests/) for example usage.
+
+## Run Tests
 
 ```bash
-pip install -r requirements.txt
+poetry run pytest path/to/test.py
 ```
 
-## Run
-
-```bash
-python main.py
-```
-
-## Standalone Scripts
-
-These scripts are in the [examples](./example/) folder.
-
-- [naive_multi_axis.py](./example/naive_multi_axis.py): Multi-Axis movement using non-blocking normal move commands.
-- [pvt_helix_movement.py](./example/pvt_helix_movement.py): Helix movement of an X-Y-Z gantry using the Zaber PVT functionality.
-- [pvt_helix_multi_device.py](./example/pvt_helix_multi_device.py): Three X-Y-Z gantries moving in the same (relative to each of the gantry itself) helix trajectory.
-- [pvt_moving_platform_multi_device.py](./example/pvt_moving_platform_multi_device.py): Three X-Y-Z gantries moving the same (relative to the ground coordinate) trajectory.
-- [pvt_moving_xyz_demo.py](./example/pvt_moving_xyz_demo.py): The demo script to show z, y and x translation of the moving platform. The moving platform will move along each direction with a sinusoidal trajectory sequentially.
-- [lib/inverse_kinematics.py](./example/lib/inverse_kinematics.py): The inverse kinematics calculation for the moving platform, with dimension measurement data.
-- [lib/pvt_utils.py](./example/lib/pvt_utils.py): The utility functions for the PVT movement. Wraps up PVT initialization and start/stop points with a velocity of zero.
-- [pvt_z_rotation.py](./example/pvt_z_rotation.py): The demo script to show the rotation of the moving platform around the z-axis, using the lib scripts.
-
-## SolidWorks Files
-
-- [End effector location.SLDPRT](./End%20effector%20location.SLDPRT): The SolidWorks sketch showing the moving platform dimensions.
+Please modify [config.toml](tests/integration/config.toml) according to your connection, before running [test_zaber_pvt.py](tests/integration/test_zaber_pvt.py).

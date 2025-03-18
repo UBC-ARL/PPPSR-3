@@ -1,6 +1,6 @@
 import tomllib
 from dataclasses import dataclass
-from typing import Annotated, Literal, Self, TypeVar
+from typing import Annotated, Literal, TypeVar
 
 import numpy as np
 import tomli_w
@@ -54,7 +54,7 @@ class PPPSRDimension:
         return {
             "u_i": [u.tolist() for u in self.u_i],
             "O_i": [
-                O.as_quat().tolist() for O in self.O_i
+                orientation.as_quat().tolist() for orientation in self.O_i
             ],  # Convert rotations to quaternions
             "b_i": [b.tolist() for b in self.b_i],
             "l_i": self.l_i.tolist(),
@@ -76,60 +76,7 @@ class PPPSRDimension:
         """Create an instance from a dictionary."""
         return cls(
             u_i=[np.array(u) for u in data["u_i"]],
-            O_i=[Rotation.from_quat(O) for O in data["O_i"]],
+            O_i=[Rotation.from_quat(orientation) for orientation in data["O_i"]],
             b_i=[np.array(b) for b in data["b_i"]],
             l_i=np.array(data["l_i"]),
         )
-
-
-if __name__ == "__main__":
-    # Example usage
-    x_unit = np.array([1, 0, 0])
-    dimension = PPPSRDimension(
-        u_i=[
-            Rotation.from_euler("z", 0, degrees=True).apply(x_unit),
-            Rotation.from_euler("z", 120, degrees=True).apply(x_unit),
-            Rotation.from_euler("z", 240, degrees=True).apply(x_unit),
-        ],
-        O_i=[
-            Rotation.from_euler("z", 180, degrees=True),
-            Rotation.from_euler("z", 300, degrees=True),
-            Rotation.from_euler("z", 60, degrees=True),
-        ],
-        b_i=[
-            Rotation.from_euler("z", 90, degrees=True).apply(0.25 * x_unit),
-            Rotation.from_euler("z", 210, degrees=True).apply(0.25 * x_unit),
-            Rotation.from_euler("z", 330, degrees=True).apply(0.25 * x_unit),
-        ],
-        l_i=0.5 * np.ones(3),
-    )
-    dimension.save_to_toml("dimension.toml")
-    dimension = PPPSRDimension.load_from_toml("dimension.toml")
-
-    print(
-        [
-            np.linalg.norm(x)
-            for x in dimension.p_i(
-                np.array([0, 0, 0]), Rotation.identity(), np.array([180, 300, 60])
-            )
-        ]
-    )
-    print(
-        dimension.p_i(
-            np.array([0, 0, 0]), Rotation.identity(), np.array([180, 300, 60])
-        )
-    )
-
-    print(
-        [
-            np.linalg.norm(x)
-            for x in dimension.p_i_local(
-                np.array([0, 0, 0]), Rotation.identity(), np.array([180, 300, 60])
-            )
-        ]
-    )
-    print(
-        dimension.p_i_local(
-            np.array([0, 0, 0]), Rotation.identity(), np.array([180, 300, 60])
-        )
-    )

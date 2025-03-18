@@ -1,4 +1,5 @@
 import tomllib
+from pathlib import Path
 from typing import Callable
 
 import numpy as np
@@ -16,8 +17,8 @@ from zaber_motion.ascii import Axis, Connection, Lockstep
 from zaber_motion.ascii.pvt_axis_definition import PvtAxisDefinition
 from zaber_motion.ascii.pvt_axis_type import PvtAxisType
 
-from pppsr_3.lib.inverse_kinematics import PPPSRDimension
-from pppsr_3.lib.pvt_utils import pvt_abs_move
+from pppsr_3 import DIMENSION, RDOF0, PPPSRDimension
+from tests.lib.pvt_utils import pvt_abs_move
 
 Q0 = np.eye(3)
 R0 = Rotation.from_matrix(Q0)
@@ -78,50 +79,19 @@ def trajectory_p_R_func_raise_tilt_torsion_down_1_10_40_10_1(
 COMMAND_FREQ_HZ = 30
 
 trajectory_f, range_ = trajectory_p_R_func_raise_tilt_torsion_down_1_10_40_10_1(90)
-t_list = np.linspace(range_.start, range_.end, 62 * COMMAND_FREQ_HZ)
+t_list = np.linspace(
+    range_.start, range_.end, (range_.end - range_.start) * COMMAND_FREQ_HZ
+)
 p_list, R_list = zip(*[trajectory_f(t) for t in t_list])
 
-# x_unit = np.array([1, 0, 0])
-# dimension = PPPSRDimension(
-#     u_i=[
-#         Rotation.from_euler("z", 210, degrees=True).apply(111.5 * x_unit),
-#         Rotation.from_euler("z", 330, degrees=True).apply(111.5 * x_unit),
-#         Rotation.from_euler("z", 90, degrees=True).apply(111.5 * x_unit),
-#     ],
-#     O_i=[
-#         Rotation.from_euler("z", -60, degrees=True),
-#         Rotation.from_euler("z", 60, degrees=True),
-#         Rotation.from_euler("z", 180, degrees=True),
-#     ],
-#     b_i=[
-#         b1 := np.array([-12.47, -68.15, 0]),
-#         Rotation.from_euler("z", 120, degrees=True).apply(b1),
-#         Rotation.from_euler("z", 240, degrees=True).apply(b1),
-#     ],
-#     l_i=85 * np.ones(3),
-# )
-# dimension.save_to_toml("dimension.toml")
-dimension = PPPSRDimension.load_from_toml("dimension.toml")
-
 local_data = np.array(
-    [
-        dimension.p_i_local(
-            p,
-            R,
-            RDOF0 := np.array(
-                [
-                    np.rad2deg(np.atan2(-12.396, 84.09)),
-                    np.rad2deg(np.atan2(79.02, -31.31)),
-                    np.rad2deg(np.atan2(-66.63, -52.78)),
-                ]
-            ),
-        )
-        for p, R in zip(p_list, R_list)
-    ]
+    [DIMENSION.p_i_local(p, R, RDOF0) for p, R in zip(p_list, R_list)]
 )
 
-if __name__ == "__main__":
-    with open("config.toml", "rb") as f:
+
+def test_zaber_pvt():
+    # if __name__ == "__main__":
+    with open(Path(__file__).parent / "config.toml", "rb") as f:
         config = tomllib.load(f)
         comport_address: str = config["comport"]
         devices_config = config["devices"]
@@ -176,13 +146,13 @@ if __name__ == "__main__":
 
         # start position definition and conversion
         leg1_start_position_driver = (
-            np.diag([1, 1, -1]) @ dimension.p_i_local(p0, R0, RDOF0)[0]
+            np.diag([1, 1, -1]) @ DIMENSION.p_i_local(p0, R0, RDOF0)[0]
         ) + np.array([250, 250, 250])
         leg2_start_position_driver = (
-            np.diag([1, 1, -1]) @ dimension.p_i_local(p0, R0, RDOF0)[1]
+            np.diag([1, 1, -1]) @ DIMENSION.p_i_local(p0, R0, RDOF0)[1]
         ) + np.array([250, 250, 250])
         leg3_start_position_driver = (
-            np.diag([1, 1, -1]) @ dimension.p_i_local(p0, R0, RDOF0)[2]
+            np.diag([1, 1, -1]) @ DIMENSION.p_i_local(p0, R0, RDOF0)[2]
         ) + np.array([250, 250, 250])
 
         # move to start position
