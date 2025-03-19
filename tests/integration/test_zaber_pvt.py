@@ -17,7 +17,7 @@ from zaber_motion.ascii import Axis, Connection, Lockstep
 from zaber_motion.ascii.pvt_axis_definition import PvtAxisDefinition
 from zaber_motion.ascii.pvt_axis_type import PvtAxisType
 
-from pppsr_3 import DIMENSION, RDOF0, PPPSRDimension
+from pppsr_3 import DIMENSION, RDOF0
 from tests.lib.pvt_utils import pvt_abs_move
 
 Q0 = np.eye(3)
@@ -90,7 +90,6 @@ local_data = np.array(
 
 
 def test_zaber_pvt():
-    # if __name__ == "__main__":
     with open(Path(__file__).parent / "config.toml", "rb") as f:
         config = tomllib.load(f)
         comport_address: str = config["comport"]

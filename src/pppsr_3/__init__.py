@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.spatial.transform import Rotation
 
-from pppsr_3.lib.inverse_kinematics import Array3, PPPSRDimension
+from pppsr_3.lib.inverse_kinematics import Array3, PPPSRDimension  # noqa: F401
 
 DIMENSION = PPPSRDimension(
     u_i=[
